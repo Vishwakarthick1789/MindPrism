@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="MindPrism — cognitive telemetry, focus rituals, and insight from your own patterns." />
+  <title>MindPrism · Cognitive Telemetry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <div>
+        <h1>MindPrism</h1>
+        <p class="tagline">Refract your day into clarity</p>
+      </div>
+    </div>
+    <div class="topbar-meta">
+      <time id="liveClock" class="mono"></time>
+      <button type="button" class="btn ghost" id="btnTheme" aria-label="Toggle theme">◐ Theme</button>
+      <button type="button" class="btn primary" id="btnFocus">◎ Focus</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel hero" aria-labelledby="pulse-heading">
+      <h2 id="pulse-heading">Daily pulse</h2>
+      <p class="lede">Three sliders, one breath. Data stays on this device unless you export it.</p>
+
+      <form id="pulseForm" class="pulse-form">
+        <div class="sliders">
+          <label class="field">
+            <span>Mood <span class="hint mono" id="moodVal">4</span></span>
+            <input type="range" id="mood" name="mood" min="1" max="5" step="1" value="4" />
+          </label>
+          <label class="field">
+            <span>Energy <span class="hint mono" id="energyVal">3</span></span>
+            <input type="range" id="energy" name="energy" min="1" max="5" step="1" value="3" />
+          </label>
+          <label class="field">
+            <span>Focus <span class="hint mono" id="focusVal">3</span></span>
+            <input type="range" id="focus" name="focus" min="1" max="5" step="1" value="3" />
+          </label>
+        </div>
+        <label class="field full">
+          <span>Note <span class="hint">optional</span></span>
+          <input type="text" id="note" name="note" maxlength="200" placeholder="What shaped this moment?" autocomplete="off" />
+        </label>
+        <fieldset class="tags-field">
+          <legend>Tags</legend>
+          <div class="tags" id="tagChoices"></div>
+        </fieldset>
+        <div class="form-actions">
+          <button type="submit" class="btn primary lg">Log pulse</button>
+          <span class="saved-hint mono" id="saveHint" role="status"></span>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel stats" aria-label="Summary statistics">
+      <div class="stat-card">
+        <span class="stat-label">Streak</span>
+        <strong class="stat-value mono" id="statStreak">0</strong>
+        <span class="stat-sub">days with ≥1 log</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Avg mood</span>
+        <strong class="stat-value mono" id="statMood">—</strong>
+        <span class="stat-sub">last 30 entries</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Balance</span>
+        <strong class="stat-value mono" id="statBalance">—</strong>
+        <span class="stat-sub">focus − fatigue proxy</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Entries</span>
+        <strong class="stat-value mono" id="statCount">0</strong>
+        <span class="stat-sub">total pulses</span>
+      </div>
+    </section>
+
+    <section class="panel viz" aria-labelledby="constellation-heading">
+      <div class="panel-head">
+        <h2 id="constellation-heading">Constellation</h2>
+        <p class="panel-desc">Each node is a day; glow follows average mood. Lines trace your path through time.</p>
+      </div>
+      <canvas id="constellation" width="900" height="320" role="img" aria-label="Constellation chart of mood over time"></canvas>
+    </section>
+
+    <section class="panel insights" aria-labelledby="insights-heading">
+      <div class="panel-head">
+        <h2 id="insights-heading">Prism insights</h2>
+        <p class="panel-desc">Correlations from your tags — not AI, not cloud. Math on your history.</p>
+      </div>
+      <ul class="insight-list" id="insightList"></ul>
+    </section>
+
+    <section class="panel list" aria-labelledby="recent-heading">
+      <div class="panel-head row">
+        <div>
+          <h2 id="recent-heading">Recent pulses</h2>
+          <p class="panel-desc">Newest first. Delete mistaken logs anytime.</p>
+        </div>
+        <div class="export-actions">
+          <button type="button" class="btn ghost sm" id="btnExport">Export JSON</button>
+          <label class="btn ghost sm file-btn">
+            Import
+            <input type="file" id="importFile" accept="application/json" hidden />
+          </label>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="pulse-table">
+          <thead>
+            <tr>
+              <th>When</th>
+              <th>Mood</th>
+              <th>Energy</th>
+              <th>Focus</th>
+              <th>Tags</th>
+              <th>Note</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="pulseRows"></tbody>
+        </table>
+      </div>
+      <p class="empty mono" id="emptyState" hidden>No pulses yet — log one above.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>MindPrism v1 · Local-first · No account required</p>
+  </footer>
+
+  <!-- Focus overlay -->
+  <div class="focus-overlay" id="focusOverlay" hidden>
+    <div class="focus-inner">
+      <p class="focus-label mono" id="focusTimer">25:00</p>
+      <div class="breath-orb" id="breathOrb" aria-hidden="true"></div>
+      <p class="focus-hint">Inhale as the orb expands · exhale as it contracts</p>
+      <div class="focus-controls">
+        <button type="button" class="btn ghost" data-min="5">5m</button>
+        <button type="button" class="btn ghost" data-min="15">15m</button>
+        <button type="button" class="btn primary" data-min="25">25m</button>
+      </div>
+      <div class="focus-actions">
+        <button type="button" class="btn ghost" id="btnFocusStart">Start</button>
+        <button type="button" class="btn ghost" id="btnFocusPause" disabled>Pause</button>
+        <button type="button" class="btn ghost" id="btnFocusClose">Exit</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
