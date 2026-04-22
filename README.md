@@ -2,7 +2,7 @@
 
 **MindPrism** is a local-first **cognitive telemetry** workspace. It turns quick self-reports (mood, energy, focus) into a living **constellation timeline**, **streak-aware statistics**, and **transparent, on-device insights** derived from your tags—not from the cloud and not from a black-box model.
 
-## Why MindPrism exists
+## Why MindPrism ???
 
 Most wellness apps optimize for engagement metrics. MindPrism optimizes for **clarity**: a calm interface, data that never leaves your machine unless you export it, and insights you can reason about because they are simple comparisons of averages you actually logged.
 
