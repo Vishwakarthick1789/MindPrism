@@ -89,7 +89,7 @@ JSON shape:
 
 Legacy import: a bare JSON **array** of entries is also accepted.
 
-## Roadmap ideas (not implemented)
+## Roadmap ideas 
 
 - Encrypted export, optional passphrase.
 - Custom tags and editable insight thresholds.
