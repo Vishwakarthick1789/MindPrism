@@ -1,4 +1,4 @@
-# MindPrism
+# MindPrism -- Mood Analyzer
 
 **MindPrism** is a local-first **cognitive telemetry** workspace. It turns quick self-reports (mood, energy, focus) into a living **constellation timeline**, **streak-aware statistics**, and **transparent, on-device insights** derived from your tags—not from the cloud and not from a black-box model.
 
